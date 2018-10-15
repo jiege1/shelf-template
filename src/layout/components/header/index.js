@@ -1,30 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import css from './index.less';
-import HEADER_DATA from 'common/const/header';
-
-// export default function() {
-//
-//   const {width, height, src} = HEADER_DATA.logo;
-//
-//   const boxProps = {
-//     style: {width, height}
-//   };
-//
-//   return (
-//     <div {...boxProps}>
-//       <div className={css.logoBox}>
-//         <img src={src} alt=""/>
-//       </div>
-//     </div>
-//   );
-// }
+import PropTypes from 'prop-types';
+import APP from 'common/const/app';
 
 export default class Header extends React.Component {
 
-  static propTypes = {};
+  static propTypes = {
+    index: PropTypes.number,
+  };
 
-  static defaultProps = {};
+  static defaultProps = {
+    index: 0,
+  };
 
   constructor(props) {
     super(props);
@@ -34,24 +21,17 @@ export default class Header extends React.Component {
   componentDidMount() {
   }
 
-  renderLogo() {
-    const {src} = HEADER_DATA.logo;
-    return (
-      <div className={css.logoBox}>
-        <img src={src} alt=""/>
-      </div>
-    );
-  }
-
   render() {
-    const {width, height} = HEADER_DATA.logo;
+    const {src, width, height, top, left} = APP.pages[this.props.index].logo;
 
     const props = {
-      style: {width, height}
+      style: {width, height, top, left},
+      className: css.logoBox,
     };
+
     return (
       <div {...props}>
-        {this.renderLogo()}
+        <img src={src} alt=""/>
       </div>
     );
   }

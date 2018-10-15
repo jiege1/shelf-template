@@ -119,7 +119,7 @@ export default class RedRain extends React.Component {
         case 'play': {
           return (
             <div className={classnames(css.time, css.play)}>
-              <div>剩余时间</div>}
+              <div>剩余时间</div>
               <div>0 : {countDown}</div>
             </div>
           );

@@ -106,6 +106,11 @@ class ScrollArea extends React.Component {
       deltaY: 0
     };
 
+    this.lastMovePoint = {
+      x: 0,
+      y: 0,
+    };
+
     this.bindedHandleWindowResize = this.handleWindowResize.bind(this);
   }
 
@@ -232,7 +237,7 @@ class ScrollArea extends React.Component {
 
   handleTouchMove(e) {
     // e.preventDefault();
-    e.stopPropagation();
+    // e.stopPropagation();
 
     let {touches} = e;
     if (touches.length === 1) {

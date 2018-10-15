@@ -3,7 +3,8 @@
 window.shelfModules = {};
 
 export const modules = {
-  redRain: false,
+  redRain: true, // 红包雨
+  mainType: 'category', // oneOf([null, 'sellers', 'category'])
 };
 
 export const loadModules = async() => {

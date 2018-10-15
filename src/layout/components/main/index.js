@@ -1,40 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import css from './index.less';
-import HEADER from 'common/const/header';
 import MAIN from 'common/const/main';
 import Scroller from 'components/scroller';
 import GoodsCard from './components/goodsCard';
 import DetailModal from './components/detailModal';
 import feedBack from 'common/utils/feedBack';
-import {getGoodsList} from 'api';
 
 
 export default class Main extends React.Component {
 
-  static propTypes = {};
+  static propTypes = {
+    goodsList: PropTypes.array,
+  };
 
-  static defaultProps = {};
+  static defaultProps = {
+    goodsList: [],
+  };
 
   constructor(props) {
     super(props);
     this.state = {
-      goodsList: [],
+      // goodsList: [],
       detail: null,
     };
   }
 
-  async componentDidMount() {
-    const goodsList = await getGoodsList();
-    this.setState({
-      goodsList: goodsList,
-    });
-  }
+  // async componentDidMount() {
+  //   const goodsList = await getGoodsList();
+  //   this.setState({
+  //     goodsList: goodsList,
+  //   });
+  // }
 
   renderGoodsList() {
 
     const {padding} = MAIN.goodsList;
-    const {goodsList} = this.state;
+    const {goodsList} = this.props;
     const props = {
       className: css.listBox,
       style: {
@@ -67,12 +69,14 @@ export default class Main extends React.Component {
 
   render() {
     const {detail} = this.state;
-    const scrollHeight = document.documentElement.clientHeight - HEADER.logo.height;
+    const {paddingTop} = MAIN.goodsList;
+    const scrollHeight = document.documentElement.clientHeight - paddingTop;
 
     const props = {
       className: css.mainContainer,
       style: {
         height: scrollHeight,
+        paddingTop,
       },
     };
     const modalProps = {
@@ -85,7 +89,6 @@ export default class Main extends React.Component {
     };
     return (
       <div {...props}>
-        <img src={MAIN.goodsList.background} alt="" className={css.bg}/>
         <Scroller height={scrollHeight}>
           {this.renderGoodsList()}
         </Scroller>

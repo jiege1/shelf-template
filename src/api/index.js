@@ -1,7 +1,6 @@
 
 import Ajax from 'common/utils/ajax';
-
-import defaultGoodsList from './local/goodsList';
+import {modules} from 'modules';
 
 /**
  * 获取商品列表
@@ -17,10 +16,39 @@ export const getGoodsList = () => new Promise((resolve) => {
     if (res && res.list && res.list.length) {
       resolve(res.list);
     } else {
-      resolve(defaultGoodsList.list);
+      requireLocal().then(data => {
+        // console.log('requireLocal===', data.list);
+        resolve(data.list);
+      });
     }
   }).catch(e => {
     console.warn('Ajax error! getGoodsList: ', e);
-    resolve(defaultGoodsList.list);
+    requireLocal().then(data => {
+      // console.log('requireLocal===', data.list);
+      resolve(data.list);
+    });
   });
+
+
 });
+
+function requireLocal() {
+  let url = 'goodsList.json';
+
+  switch (modules.mainType) {
+    case 'sellers': {
+      url = 'goodsListWithSellers.json';
+      break;
+    }
+    case 'category': {
+      url = 'goodsListWithCategory.json';
+      break;
+    }
+  }
+
+  return new Promise((resolve) => {
+    import(`./local/${url}`).then(res => {
+      resolve(res.default);
+    });
+  });
+}
