@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Utils from 'common/utils';
 
 /**
  * Ajax.query({url, params, method = 'get'})

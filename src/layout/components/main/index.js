@@ -6,6 +6,7 @@ import MAIN from 'common/const/main';
 import Scroller from 'components/scroller';
 import GoodsCard from './components/goodsCard';
 import DetailModal from './components/detailModal';
+import feedBack from 'common/utils/feedBack';
 import {getGoodsList} from 'api';
 
 
@@ -50,6 +51,10 @@ export default class Main extends React.Component {
               onClickItem: () => {
                 this.setState({
                   detail: goods,
+                });
+                feedBack({
+                  action: '点击商品，查看详情',
+                  itemId: goods.goodsTaobaoId,
                 });
               },
             };

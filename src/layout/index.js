@@ -23,7 +23,6 @@ export default class Layout extends React.Component {
 
   componentDidMount() {
     loadModules().then(res => {
-      console.log('res===', res);
       this.setState({
         loading: false,
       });

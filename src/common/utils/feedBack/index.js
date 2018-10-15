@@ -11,13 +11,17 @@ import moment from 'moment';
  *
  * @returns {Promise<void>}
  */
-export default async function({action, itemId, couponId}) {
+export default function({action, itemId, couponId}) {
 
   // 记录到本地日志
-  if (itemId) {
-    ele.logger.info(`商品 ${action} ${itemId}`);
-  } else if (couponId) {
-    ele.logger.info(`优惠卷 ${action} ${couponId}`);
+  if (ele && ele.logger) {
+
+    if (itemId) {
+      ele.logger.info(`${action} ${itemId}`);
+    } else if (couponId) {
+      ele.logger.info(`${action} ${couponId}`);
+    }
+
   }
 
   const op_time = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -31,14 +35,20 @@ export default async function({action, itemId, couponId}) {
     LocalStorage.putJSON('feedBack', [...LocalStorage.getJSON('feedBack'), {op_time, action, itemId, couponId}]);
   }
 
-  const data = await Ajax.query({
+  Ajax.query({
     url: 'feedBack',
-    params: localStorage.getItem('feedBack'),
+    method: 'post',
+    params: {
+      actions: localStorage.getItem('feedBack')
+    },
     header: {cancel: true},
-  });
+  }).then(res => {
 
-  if (data) {
-    LocalStorage.clear();
-  }
+    // 发送成功，清楚本地缓存的打点数据
+    if (res) {
+      LocalStorage.clear();
+    }
+
+  });
 
 }
