@@ -38,6 +38,7 @@ module.exports = {
     "templateStrings": true // 是否支持 ES6 模板语法
   },
   "globals": {
+    "ele": true, // electron 全局变量，用于调用electron方法
     "__webpack_public_path__": true,
     "process": true,
     "__dirname": true,

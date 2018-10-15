@@ -3,6 +3,23 @@ import PropTypes from 'prop-types';
 import css from './index.less';
 import HEADER_DATA from 'common/const/header';
 
+// export default function() {
+//
+//   const {width, height, src} = HEADER_DATA.logo;
+//
+//   const boxProps = {
+//     style: {width, height}
+//   };
+//
+//   return (
+//     <div {...boxProps}>
+//       <div className={css.logoBox}>
+//         <img src={src} alt=""/>
+//       </div>
+//     </div>
+//   );
+// }
+
 export default class Header extends React.Component {
 
   static propTypes = {};

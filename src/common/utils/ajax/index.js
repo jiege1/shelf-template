@@ -7,7 +7,7 @@ import Utils from 'common/utils';
  */
 export default class Ajax {
 
-  static query({url, params = {}, method = 'get', successLabel = null}) {
+  static query({url, params = {}, method = 'get', header = {cancel: false}}) {
 
     const api = eval('CFG.api.' + url);
 
@@ -19,8 +19,15 @@ export default class Ajax {
       params = {params};
     }
 
+    // 添加终止ajax
+    const {cancel} = header;
+    if (cancel) {
+      const CancelToken = axios.CancelToken;
+      this.source = CancelToken.source();
+    }
+
     return new Promise((resolve, reject) => {
-      axios[method](api, params).then(res => {
+      axios[method](api, params, header).then(res => {
         const {data, code, msg} = res.data;
         if (!code && data) {
           resolve(data);
@@ -30,6 +37,13 @@ export default class Ajax {
         reject(err);
       });
     });
+
+  }
+
+  static cancel() {
+    if (this.source) {
+      this.source.cancel('取消请求');
+    }
 
   }
 }

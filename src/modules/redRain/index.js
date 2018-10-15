@@ -15,7 +15,7 @@ export default class RedRain extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      countDown: 4,
+      countDown: 3,
       gameState: 'none' // none getReady play prize
     };
     this.newRedRain = this.newRedRain.bind(this);
@@ -73,7 +73,7 @@ export default class RedRain extends React.Component {
           clearInterval(this.play);
           this.setState({
             gameState: 'prize',
-            countDown: 4 // 还原
+            countDown: 3 // 还原
           });
         }
       });
@@ -97,30 +97,62 @@ export default class RedRain extends React.Component {
     );
   }
 
-  render() {
+  renderContent() {
     const {countDown, gameState } = this.state;
-    const {type, startContent, redRainBut} = redRainConst;
+    const {type, startContent} = redRainConst;
     const isLevel = type === 'level';
+
+    if (gameState === 'none') {
+      return null;
+    }
+
+    const renderStatus = () => {
+      switch (gameState) {
+        case 'getReady': {
+          return [
+            <div key="getReady1" className={classnames(css.time)}>
+              <div>0 : {countDown}</div>
+            </div>,
+            <img key="getReady2" className={css.startContent} src={startContent} alt=""/>
+          ];
+        }
+        case 'play': {
+          return (
+            <div className={classnames(css.time, css.play)}>
+              <div>剩余时间</div>}
+              <div>0 : {countDown}</div>
+            </div>
+          );
+        }
+        case 'prize': {
+          return this.renderPrize();
+        }
+      }
+    };
+
+    const props = {
+      ref: this.pixiRef,
+      className: classnames(css.piXiBg, {[css.piXiBgIsLevel]: isLevel}),
+    };
+
+    return (
+      <div {...props}>
+        {renderStatus()}
+      </div>
+    );
+  }
+
+  render() {
+    const {redRainBut} = redRainConst;
+    const props = {
+      src: redRainBut,
+      onClick: this.newRedRain,
+      className: css.redRainBut,
+    };
     return (
       <Fragment>
-        <img onClick={this.newRedRain} className={css.redRainBut} src={redRainBut} alt=""/>
-        {
-          gameState !== 'none' &&
-          <div className={classnames(css.piXiBg, {[css.piXiBgIsLevel]: isLevel})} ref={this.pixiRef}>
-            {
-              (gameState === 'getReady' || gameState === 'play')
-              &&
-              <div className={classnames(css.time, {[css.play]: gameState === 'play'})}>
-                {gameState === 'play' && <div>剩余时间</div>}
-                <div>
-                  0 : {countDown}
-                </div>
-              </div>
-            }
-            {gameState === 'getReady' && <img className={css.startContent} src={startContent} alt=""/>}
-            {gameState === 'prize' && this.renderPrize()}
-          </div>
-        }
+        <img {...props}/>
+        {this.renderContent()}
       </Fragment>
     );
   }
