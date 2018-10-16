@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {sendError} from 'components/errorLog';
 
 /**
  * Ajax.query({url, params, method = 'get'})
@@ -33,6 +34,8 @@ export default class Ajax {
         }
         reject({code, msg, data: null});
       }).catch(err => {
+
+        sendError({error: err, info: 'Ajax failed!'});
         reject(err);
       });
     });

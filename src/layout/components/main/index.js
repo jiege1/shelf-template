@@ -4,7 +4,6 @@ import css from './index.less';
 import MAIN from 'common/const/main';
 import Scroller from 'components/scroller';
 import GoodsCard from './components/goodsCard';
-// import DetailModal from './components/detailModal';
 import feedBack from 'common/utils/feedBack';
 
 
@@ -22,18 +21,8 @@ export default class Main extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      // goodsList: [],
-      detail: null,
-    };
+    this.state = {};
   }
-
-  // async componentDidMount() {
-  //   const goodsList = await getGoodsList();
-  //   this.setState({
-  //     goodsList: goodsList,
-  //   });
-  // }
 
   renderGoodsList() {
 
@@ -48,15 +37,12 @@ export default class Main extends React.Component {
     return (
       <div {...props}>
         {
-          goodsList.map(goods => {
+          goodsList.map((goods, index) => {
             const goodsProps = {
-              key: goods.goodsTaobaoId,
+              key: `${goods.goodsTaobaoId}_${index}`,
               goods,
               onClickItem: () => {
                 onGoodsClick(goods);
-                // this.setState({
-                //   detail: goods,
-                // });
                 feedBack({
                   action: '点击商品，查看详情',
                   itemId: goods.goodsTaobaoId,
@@ -71,7 +57,6 @@ export default class Main extends React.Component {
   }
 
   render() {
-    // const {detail} = this.state;
     const {paddingTop} = MAIN.goodsList;
     const scrollHeight = document.documentElement.clientHeight - paddingTop;
 
@@ -82,20 +67,11 @@ export default class Main extends React.Component {
         paddingTop,
       },
     };
-    // const modalProps = {
-    //   goods: detail,
-    //   onClose: () => {
-    //     this.setState({
-    //       detail: null,
-    //     });
-    //   },
-    // };
     return (
       <div {...props}>
         <Scroller height={scrollHeight}>
           {this.renderGoodsList()}
         </Scroller>
-        {/*{detail && <DetailModal {...modalProps}/>}*/}
       </div>
     );
   }

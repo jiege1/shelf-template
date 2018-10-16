@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import css from './index.less';
-// import errorLog from 'components/errorLog';
+import errorLog from 'components/errorLog';
 import Header from './components/header';
 import Main from './components/main';
 import DetailModal from './components/detailModal';
@@ -10,8 +10,7 @@ import Slider from 'react-slick';
 import 'react-slick/lib/index.min.css';
 import {getGoodsList} from 'api';
 
-// @errorLog
-export default class Layout extends React.Component {
+class Layout extends React.Component {
 
   static propTypes = {};
 
@@ -44,6 +43,7 @@ export default class Layout extends React.Component {
         loading: false,
       });
     });
+
   }
 
   onMoreTypeClick(index) {
@@ -223,3 +223,5 @@ export default class Layout extends React.Component {
     );
   }
 }
+
+export default errorLog(Layout);
