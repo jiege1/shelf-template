@@ -4,7 +4,7 @@ import css from './index.less';
 import MAIN from 'common/const/main';
 import Scroller from 'components/scroller';
 import GoodsCard from './components/goodsCard';
-import DetailModal from './components/detailModal';
+// import DetailModal from './components/detailModal';
 import feedBack from 'common/utils/feedBack';
 
 
@@ -12,10 +12,12 @@ export default class Main extends React.Component {
 
   static propTypes = {
     goodsList: PropTypes.array,
+    onGoodsClick: PropTypes.func,
   };
 
   static defaultProps = {
     goodsList: [],
+    onGoodsClick: () => {},
   };
 
   constructor(props) {
@@ -36,7 +38,7 @@ export default class Main extends React.Component {
   renderGoodsList() {
 
     const {padding} = MAIN.goodsList;
-    const {goodsList} = this.props;
+    const {goodsList, onGoodsClick} = this.props;
     const props = {
       className: css.listBox,
       style: {
@@ -51,9 +53,10 @@ export default class Main extends React.Component {
               key: goods.goodsTaobaoId,
               goods,
               onClickItem: () => {
-                this.setState({
-                  detail: goods,
-                });
+                onGoodsClick(goods);
+                // this.setState({
+                //   detail: goods,
+                // });
                 feedBack({
                   action: '点击商品，查看详情',
                   itemId: goods.goodsTaobaoId,
@@ -68,7 +71,7 @@ export default class Main extends React.Component {
   }
 
   render() {
-    const {detail} = this.state;
+    // const {detail} = this.state;
     const {paddingTop} = MAIN.goodsList;
     const scrollHeight = document.documentElement.clientHeight - paddingTop;
 
@@ -79,20 +82,20 @@ export default class Main extends React.Component {
         paddingTop,
       },
     };
-    const modalProps = {
-      goods: detail,
-      onClose: () => {
-        this.setState({
-          detail: null,
-        });
-      },
-    };
+    // const modalProps = {
+    //   goods: detail,
+    //   onClose: () => {
+    //     this.setState({
+    //       detail: null,
+    //     });
+    //   },
+    // };
     return (
       <div {...props}>
         <Scroller height={scrollHeight}>
           {this.renderGoodsList()}
         </Scroller>
-        {detail && <DetailModal {...modalProps}/>}
+        {/*{detail && <DetailModal {...modalProps}/>}*/}
       </div>
     );
   }

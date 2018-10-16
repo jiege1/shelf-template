@@ -14,15 +14,15 @@ import moment from 'moment';
 export default function({action, itemId, couponId}) {
 
   // 记录到本地日志
-  if (ele && ele.logger) {
-
-    if (itemId) {
-      ele.logger.info(`${action} ${itemId}`);
-    } else if (couponId) {
-      ele.logger.info(`${action} ${couponId}`);
-    }
-
-  }
+  // if (ele && ele.logger) {
+  //
+  //   if (itemId) {
+  //     ele.logger.info(`${action} ${itemId}`);
+  //   } else if (couponId) {
+  //     ele.logger.info(`${action} ${couponId}`);
+  //   }
+  //
+  // }
 
   const op_time = moment().format('YYYY-MM-DD HH:mm:ss');
 
@@ -35,20 +35,20 @@ export default function({action, itemId, couponId}) {
     LocalStorage.putJSON('feedBack', [...LocalStorage.getJSON('feedBack'), {op_time, action, itemId, couponId}]);
   }
 
-  Ajax.query({
-    url: 'feedBack',
-    method: 'post',
-    params: {
-      actions: localStorage.getItem('feedBack')
-    },
-    header: {cancel: true},
-  }).then(res => {
-
-    // 发送成功，清楚本地缓存的打点数据
-    if (res) {
-      LocalStorage.clear();
-    }
-
-  });
+  // Ajax.query({
+  //   url: 'feedBack',
+  //   method: 'post',
+  //   params: {
+  //     actions: localStorage.getItem('feedBack')
+  //   },
+  //   header: {cancel: true},
+  // }).then(res => {
+  //
+  //   // 发送成功，清楚本地缓存的打点数据
+  //   if (res) {
+  //     LocalStorage.clear();
+  //   }
+  //
+  // });
 
 }

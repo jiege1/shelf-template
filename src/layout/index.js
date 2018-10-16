@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import css from './index.less';
 // import errorLog from 'components/errorLog';
 import Header from './components/header';
 import Main from './components/main';
+import DetailModal from './components/detailModal';
 import APP from 'common/const/app';
 import {loadModules, modules} from 'modules';
 import Slider from 'react-slick';
@@ -23,6 +24,7 @@ export default class Layout extends React.Component {
       goodsList: [],
       selectType: modules.mainType === 'category' ? -1 : 0,
       isTouching: false,
+      detail: null,
     };
 
     this.sliderRef = React.createRef();
@@ -51,10 +53,10 @@ export default class Layout extends React.Component {
         this.sliderRef.current.slickGoTo(index);
         break;
       }
-      case 'category': {
-        // todo category
-        break;
-      }
+      // case 'category': {
+      //   // todo category
+      //   break;
+      // }
     }
 
     this.setState({
@@ -132,11 +134,21 @@ export default class Layout extends React.Component {
                 }
               };
 
+
+              const mainProps = {
+                goodsList: item.item,
+                onGoodsClick: (goods) => {
+                  this.setState({
+                    detail: goods,
+                  });
+                },
+              };
+
               return (
                 <div {...pageProps}>
                   <img src={APP.pages[0].bg} alt="" className={css.bg}/>
                   <Header />
-                  <Main goodsList={item.item}/>
+                  <Main {...mainProps}/>
                 </div>
               );
             })
@@ -169,11 +181,20 @@ export default class Layout extends React.Component {
       }
     }
 
+    const mainProps = {
+      goodsList,
+      onGoodsClick: (goods) => {
+        this.setState({
+          detail: goods,
+        });
+      },
+    };
+
     return (
       <div className={css.layout}>
         <img src={APP.pages[0].bg} alt="" className={css.bg}/>
         <Header />
-        <Main goodsList={goodsList}/>
+        <Main {...mainProps}/>
         {this.renderModules()}
       </div>
     );
@@ -181,11 +202,24 @@ export default class Layout extends React.Component {
 
   render() {
 
-    // 多商家时， 渲染轮播
-    if (modules.mainType === 'sellers') {
-      return this.renderSwipeSellers();
-    }
+    const {detail} = this.state;
 
-    return this.renderOneSeller();
+    const modalProps = {
+      goods: detail,
+      onClose: () => {
+        this.setState({
+          detail: null,
+        });
+      },
+    };
+
+    return (
+      <Fragment>
+        {
+          modules.mainType === 'sellers' ? this.renderSwipeSellers() : this.renderOneSeller()
+        }
+        {detail && <DetailModal {...modalProps}/>}
+      </Fragment>
+    );
   }
 }
