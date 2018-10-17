@@ -55,6 +55,7 @@ import Utils from 'common/utils';
       // step === 1 时，触发回到桌面
       if (step === 1) {
         alert('回到桌面');
+
         restore();
         return;
       }

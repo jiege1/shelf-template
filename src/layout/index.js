@@ -7,7 +7,6 @@ import DetailModal from './components/detailModal';
 import APP from 'common/const/app';
 import {loadModules, modules} from 'modules';
 import Slider from 'react-slick';
-import 'react-slick/lib/index.min.css';
 import {getGoodsList} from 'api';
 
 class Layout extends React.Component {
