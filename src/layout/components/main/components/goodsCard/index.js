@@ -24,7 +24,7 @@ export default class GoodsCard extends React.Component {
 
   render() {
     const {card} = MAIN.goodsList;
-    const {goods: {picUrl, customTitle, title}, onClickItem} = this.props;
+    const {goods: {picUrl, title}, onClickItem} = this.props;
 
     const width = card.width - 2 * card.padding;
 
@@ -44,7 +44,7 @@ export default class GoodsCard extends React.Component {
           <img src={picUrl} alt=""/>
         </div>
         <div className={css.titleBox}>
-          {customTitle ? customTitle : title}
+          {title}
         </div>
       </div>
     );

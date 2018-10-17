@@ -1,6 +1,7 @@
 
 import Ajax from 'common/utils/ajax';
 import {modules} from 'modules';
+import checkData from 'api/check';
 
 /**
  * 获取商品列表
@@ -8,27 +9,29 @@ import {modules} from 'modules';
  */
 export const getGoodsList = () => new Promise((resolve) => {
 
-  // todo 数据过滤和处理
+  let url = modules.mainType;
 
-  Ajax.query({
-    url: 'goodsList',
-  }).then(res => {
+  if (!url) {
+    url = 'goodsList';
+  }
+
+  Ajax.query({url}).then(res => {
     if (res && res.list && res.list.length) {
-      resolve(res.list);
+      const checkedData = checkData[url](res).getJson;
+      resolve(checkedData.list);
     } else {
       requireLocal().then(data => {
-        // console.log('requireLocal===', data.list);
-        resolve(data.list);
+        const checkedData = checkData[url](data).getJson;
+        resolve(checkedData.list);
       });
     }
   }).catch(e => {
     console.warn('Ajax error! getGoodsList: ', e);
     requireLocal().then(data => {
-      // console.log('requireLocal===', data.list);
-      resolve(data.list);
+      const checkedData = checkData[url](data).getJson;
+      resolve(checkedData.list);
     });
   });
-
 
 });
 

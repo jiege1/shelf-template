@@ -32,6 +32,7 @@ export default class Ajax {
         if (!code && data) {
           resolve(data);
         }
+        sendError({error: {code, msg, data: null}, info: 'Ajax failed!'});
         reject({code, msg, data: null});
       }).catch(err => {
 

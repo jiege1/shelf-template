@@ -21,13 +21,19 @@ export default class BuyShow extends React.Component {
 
   render() {
     let {buyShow} = this.props;
-    buyShow = JSON.parse(buyShow);
-    const props = {
-      list: buyShow.map(item => item.content),
-    };
+    let list = [];
+
+    // 可能时分号隔开的字符串
+    try {
+      buyShow = JSON.parse(buyShow);
+      list = buyShow.map(item => item.content);
+    } catch (e) {
+      list = buyShow.replace(/[;]|[；]/g, ';').split(';');
+    }
+
     return (
       <div className={css.container}>
-        <Danmu {...props}/>
+        <Danmu list={list}/>
       </div>
     );
   }

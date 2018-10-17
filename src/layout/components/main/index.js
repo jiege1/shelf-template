@@ -28,6 +28,7 @@ export default class Main extends React.Component {
 
     const {padding} = MAIN.goodsList;
     const {goodsList, onGoodsClick} = this.props;
+
     const props = {
       className: css.listBox,
       style: {
