@@ -3,18 +3,22 @@ import PropTypes from 'prop-types';
 import css from './index.less';
 import ScrollArea from 'components/scrollArea';
 import MAIN from 'common/const/main';
+import {modules} from 'modules';
 import Detail from './components/detail';
 import BuyShow from './components/buyShow';
+import cart from 'assets/images/cart.png';
 
 export default class DetailModal extends React.Component {
 
   static propTypes = {
     goods: PropTypes.object.isRequired,
     onClose: PropTypes.func,
+    onAddCart: PropTypes.func,
   };
 
   static defaultProps = {
     onClose: () => {},
+    onAddCart: () => {}
   };
 
   constructor(props) {
@@ -25,6 +29,20 @@ export default class DetailModal extends React.Component {
   componentDidMount() {
   }
 
+  renderCartAddFav() {
+
+    const {onAddCart, goods} = this.props;
+    return (
+      <div className={css.cartBox}>
+        <div onClick={() => {
+          onAddCart(goods.goodsTaobaoId);
+        }}>
+          <img src={cart} alt=""/>
+          <span>加入购物车</span>
+        </div>
+      </div>
+    );
+  }
 
   renderDescription() {
     const {customDescription} = this.props.goods;
@@ -53,7 +71,12 @@ export default class DetailModal extends React.Component {
       <div className={css.wrapper}>
         <div className={css.content}>
           <div className={css.left}>
-            <Detail goods={other}/>
+            <div>
+              <Detail goods={other}/>
+              {
+                modules.shopCar && this.renderCartAddFav()
+              }
+            </div>
             <BuyShow buyShow={buyShow}/>
           </div>
           <div className={css.right}>

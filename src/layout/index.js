@@ -1,15 +1,16 @@
 import React, {Fragment} from 'react';
+import {inject, observer} from 'mobx-react';
 import css from './index.less';
-import errorLog from 'components/errorLog';
 import Header from './components/header';
 import Main from './components/main';
 import DetailModal from './components/detailModal';
 import APP from 'common/const/app';
-import {loadModules, modules} from 'modules';
+import {modules} from 'modules';
 import Slider from 'react-slick';
-import {getGoodsList} from 'api';
 
-class Layout extends React.Component {
+@inject('store')
+@observer
+export default class Layout extends React.Component {
 
   static propTypes = {};
 
@@ -17,35 +18,20 @@ class Layout extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-      goodsList: [],
-      selectType: modules.mainType === 'category' ? -1 : 0,
-      isTouching: false,
-      detail: null,
-    };
+    this.state = {};
 
     this.sliderRef = React.createRef();
   }
 
-  async componentDidMount() {
-
-    // 请求数据
-    const goodsList = await getGoodsList();
-    this.setState({
-      goodsList: goodsList,
-    });
-
-    // 加载模块
-    loadModules().then(() => {
-      this.setState({
-        loading: false,
-      });
-    });
-
+  componentDidMount() {
+    const {store} = this.props;
+    store.queryGoodsList();
+    store.loadModules();
   }
 
   onMoreTypeClick(index) {
+
+    const {store} = this.props;
     // 轮播切换
     switch (modules.mainType) {
       case 'sellers': {
@@ -58,20 +44,26 @@ class Layout extends React.Component {
       // }
     }
 
-    this.setState({
+    store.update({
       selectType: index,
     });
 
   }
 
   renderModules() {
-    const {loading, goodsList, selectType} = this.state;
+    const {
+      store,
+      store: {
+        loading, modules: loadedModules, goodsList, selectType, showCart
+      }
+    } = this.props;
+
     if (loading) return null;
 
-    const ModuleKeys = Object.keys(window.shelfModules) || [];
+    return loadedModules.map(item => {
 
-    return ModuleKeys.map(key => {
-      const Module = window.shelfModules[key];
+      const key = item.key;
+      const Module = item.value;
 
       let props = {
         key: `module_${key}`,
@@ -82,7 +74,7 @@ class Layout extends React.Component {
         case 'mainType': {
           props = {
             ...props,
-            classify: goodsList.map(item => item.classify),
+            classify: goodsList.map(goods => goods.classify),
             mainType: modules.mainType,
             classifyIndex: selectType,
             getClassifyIndex: this.onMoreTypeClick.bind(this),
@@ -95,12 +87,11 @@ class Layout extends React.Component {
     });
   }
 
-
   /**
    * 多商家，采用轮播来展示
    */
   renderSwipeSellers() {
-    const {goodsList} = this.state;
+    const {store, store: {goodsList}} = this.props;
 
     const props = {
       className: css.swiper,
@@ -110,7 +101,7 @@ class Layout extends React.Component {
       arrows: false,
       autoplaySpeed: 10000,
       beforeChange: (oldIndex, newIndex) => {
-        this.setState({
+        store.update({
           selectType: newIndex,
         });
       },
@@ -133,21 +124,11 @@ class Layout extends React.Component {
                 }
               };
 
-
-              const mainProps = {
-                goodsList: item.item,
-                onGoodsClick: (goods) => {
-                  this.setState({
-                    detail: goods,
-                  });
-                },
-              };
-
               return (
                 <div {...pageProps}>
                   <img src={APP.pages[0].bg} alt="" className={css.bg}/>
                   <Header />
-                  <Main {...mainProps}/>
+                  <Main goodsList={item.item}/>
                 </div>
               );
             })
@@ -165,7 +146,7 @@ class Layout extends React.Component {
    * @returns {*}
    */
   renderOneSeller() {
-    let {goodsList, selectType} = this.state;
+    let {goodsList, selectType} = this.props.store;
 
     // 单个商家， 存在分类的话, 过滤数据
     if (goodsList && goodsList.length && modules.mainType === 'category') {
@@ -180,35 +161,28 @@ class Layout extends React.Component {
       }
     }
 
-    const mainProps = {
-      goodsList,
-      onGoodsClick: (goods) => {
-        this.setState({
-          detail: goods,
-        });
-      },
-    };
-
     return (
       <div className={css.layout}>
         <img src={APP.pages[0].bg} alt="" className={css.bg}/>
         <Header />
-        <Main {...mainProps}/>
+        <Main goodsList={goodsList}/>
         {this.renderModules()}
       </div>
     );
   }
 
   render() {
+    const {store, store: {detail}} = this.props;
 
-    const {detail} = this.state;
-
-    const modalProps = {
+    const props = {
       goods: detail,
       onClose: () => {
-        this.setState({
+        store.update({
           detail: null,
         });
+      },
+      onAddCart: (goodsId) => {
+        store.shopCart.add(goodsId);
       },
     };
 
@@ -217,10 +191,8 @@ class Layout extends React.Component {
         {
           modules.mainType === 'sellers' ? this.renderSwipeSellers() : this.renderOneSeller()
         }
-        {detail && <DetailModal {...modalProps}/>}
+        {detail && <DetailModal {...props}/>}
       </Fragment>
     );
   }
 }
-
-export default errorLog(Layout);

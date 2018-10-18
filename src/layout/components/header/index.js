@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import {inject, observer} from 'mobx-react';
 import css from './index.less';
 import PropTypes from 'prop-types';
 import APP from 'common/const/app';
 
+@inject('store')
+@observer
 export default class Header extends React.Component {
 
   static propTypes = {
@@ -22,7 +25,10 @@ export default class Header extends React.Component {
   }
 
   render() {
-    const {src, width, height, top, left} = APP.pages[this.props.index].logo;
+    const {
+      logo: {src, width, height, top, left},
+      header: {bg},
+    } = APP.pages[this.props.index];
 
     const props = {
       style: {width, height, top, left},
@@ -30,9 +36,12 @@ export default class Header extends React.Component {
     };
 
     return (
-      <div {...props}>
-        <img src={src} alt=""/>
-      </div>
+      <Fragment>
+        <img src={bg} alt="" className={css.headerBg}/>
+        <div {...props}>
+          <img src={src} alt=""/>
+        </div>
+      </Fragment>
     );
   }
 

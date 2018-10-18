@@ -67,6 +67,7 @@ class Danmu extends React.Component {
           list.map((item, i) => {
             const props = {
               key: i,
+              i,
               html: textHtml(item),
               left: boxSize.width + 50 || 1230,
               maxTop: boxSize.height - 42 || 200,

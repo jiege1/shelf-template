@@ -10,8 +10,15 @@ import moment from 'moment';
  * @param couponId    优惠卷ID,   string or null
  *
  * @returns {Promise<void>}
+ *
+ * ACTION枚举值：
+ * ITEM_CLICK（商品点击时必须设置ITEM_ID）
+ * RECEIVE_COUPONS（领取优惠券时必须设置COUPON_ID）
+ * BUY_CLICK（点击购买）
+ * SHARE_CLICK（点击分享）
+ *
  */
-export default function({action, itemId, couponId}) {
+export default function({action = 'ITEM_CLICK', itemId, couponId}) {
 
   // 记录到本地日志
   // if (ele && ele.logger) {
@@ -35,20 +42,20 @@ export default function({action, itemId, couponId}) {
     LocalStorage.putJSON('feedBack', [...LocalStorage.getJSON('feedBack'), {op_time, action, itemId, couponId}]);
   }
 
-  // Ajax.query({
-  //   url: 'feedBack',
-  //   method: 'post',
-  //   params: {
-  //     actions: localStorage.getItem('feedBack')
-  //   },
-  //   header: {cancel: true},
-  // }).then(res => {
-  //
-  //   // 发送成功，清楚本地缓存的打点数据
-  //   if (res) {
-  //     LocalStorage.clear();
-  //   }
-  //
-  // });
+  Ajax.query({
+    url: 'feedBack',
+    method: 'post',
+    params: {
+      actions: localStorage.getItem('feedBack')
+    },
+    header: {cancel: true},
+  }).then(res => {
+
+    // 发送成功，清楚本地缓存的打点数据
+    if (res) {
+      LocalStorage.clear();
+    }
+
+  });
 
 }

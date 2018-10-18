@@ -1,22 +1,21 @@
 import React from 'react';
+import {inject, observer} from 'mobx-react';
 import PropTypes from 'prop-types';
 import css from './index.less';
 import MAIN from 'common/const/main';
 import Scroller from 'components/scroller';
 import GoodsCard from './components/goodsCard';
-import feedBack from 'common/utils/feedBack';
 
-
+@inject('store')
+@observer
 export default class Main extends React.Component {
 
   static propTypes = {
     goodsList: PropTypes.array,
-    onGoodsClick: PropTypes.func,
   };
 
   static defaultProps = {
     goodsList: [],
-    onGoodsClick: () => {},
   };
 
   constructor(props) {
@@ -26,13 +25,14 @@ export default class Main extends React.Component {
 
   renderGoodsList() {
 
-    const {padding} = MAIN.goodsList;
-    const {goodsList, onGoodsClick} = this.props;
+    const {padding, scrollPaddingTop} = MAIN.goodsList;
+    const {goodsList, store} = this.props;
 
     const props = {
       className: css.listBox,
       style: {
         padding,
+        paddingTop: scrollPaddingTop + padding,
       }
     };
     return (
@@ -40,14 +40,13 @@ export default class Main extends React.Component {
         {
           goodsList.map((goods, index) => {
             const goodsProps = {
-              key: `${goods.goodsTaobaoId}_${index}`,
               goods,
+              key: `${goods.goodsTaobaoId}_${index}`,
               onClickItem: () => {
-                onGoodsClick(goods);
-                feedBack({
-                  action: '点击商品，查看详情',
-                  itemId: goods.goodsTaobaoId,
-                });
+                store.showGoodsDetail(goods);
+              },
+              onAddCart: (goodsId) => {
+                store.shopCart.add(goodsId);
               },
             };
             return <GoodsCard {...goodsProps}/>;

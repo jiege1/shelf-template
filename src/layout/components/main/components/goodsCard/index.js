@@ -2,16 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './index.less';
 import MAIN from 'common/const/main';
+import {modules} from 'modules';
+import CART from 'common/const/shopConst';
 
 export default class GoodsCard extends React.Component {
 
   static propTypes = {
     goods: PropTypes.object.isRequired,
     onClickItem: PropTypes.func,
+    onAddCart: PropTypes.func,
   };
 
   static defaultProps = {
-    onClickItem: () => {}
+    onClickItem: () => {},
+    onAddCart: () => {},
   };
 
   constructor(props) {
@@ -20,6 +24,24 @@ export default class GoodsCard extends React.Component {
   }
 
   componentDidMount() {
+  }
+
+  renderAddCart() {
+    if (!modules.shopCar) return null;
+    const {goods, onAddCart} = this.props;
+
+    const {src, ...other} = CART.addCart;
+
+    const props = {
+      src,
+      style: other,
+      className: css.addCart,
+      onClick: (e) => {
+        e.stopPropagation();
+        onAddCart(goods.goodsTaobaoId);
+      },
+    };
+    return <img {...props} />;
   }
 
   render() {
@@ -46,6 +68,9 @@ export default class GoodsCard extends React.Component {
         <div className={css.titleBox}>
           {title}
         </div>
+        {
+          modules.shopCar && this.renderAddCart()
+        }
       </div>
     );
   }

@@ -5,7 +5,8 @@ import close from 'assets/images/close.png';
 export default {
   goodsList: {
     padding: 24,
-    paddingTop: 286,
+    paddingTop: 165,
+    scrollPaddingTop: 48,
     card: {
       padding: 20,
       width: 333,

@@ -5,8 +5,13 @@ const rd = (x = 10) => {
   return Math.random() * x;
 };
 
-const getTop = (maxHeight) => {
-  return Math.random() * maxHeight;
+const getTop = (maxHeight, i) => {
+  // let percents = [];
+  // for (let i = 0; i < 10; i++) {
+  //   percents.push(i * 10);
+  // }
+  console.log(maxHeight);
+  return (i / 10) * maxHeight + 20;
   // console.log(maxHeight);
   // let topArr = [];
   // for (let i = 0; i <= maxHeight; i++) {
@@ -34,14 +39,14 @@ class Text extends React.Component {
   }
 
   render() {
-    const { html, left, maxTop, duration, length } = this.props;
+    const { html, left, maxTop, duration, length, i } = this.props;
     const maxDura = Math.max(...duration);
     const minDura = Math.min(...duration);
     const props = {
       style: {
         color: '#fff',
         position: 'absolute',
-        top: getTop(maxTop),
+        top: getTop(maxTop, i),
         left: left,
         display: 'inline-block',
         whiteSpace: 'nowrap',

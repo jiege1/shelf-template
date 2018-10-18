@@ -19,7 +19,7 @@ export default class BuyShow extends React.Component {
   componentDidMount() {
   }
 
-  render() {
+  get buyShowList() {
     let {buyShow} = this.props;
     let list = [];
 
@@ -31,9 +31,20 @@ export default class BuyShow extends React.Component {
       list = buyShow.replace(/[;]|[；]/g, ';').split(';');
     }
 
+    list = list.filter(item => item.length >= 10);
+
+    // 5 - 8 随机数
+    const max = Math.floor(Math.random() * 3) + 10;
+    list = list.slice(0, max);
+
+    return list;
+  }
+
+  render() {
+
     return (
       <div className={css.container}>
-        <Danmu list={list}/>
+        <Danmu list={this.buyShowList}/>
       </div>
     );
   }

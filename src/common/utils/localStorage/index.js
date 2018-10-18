@@ -1,4 +1,3 @@
-
 export default class LocalStorage {
 
   // 获取是否有数据

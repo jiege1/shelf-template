@@ -4,7 +4,8 @@ window.shelfModules = {};
 
 export const modules = {
   redRain: true, // 红包雨
-  mainType: null, // oneOf([null, 'sellers', 'category'])
+  shopCar: true, // 购物车
+  mainType: 'sellers', // oneOf([null, 'sellers', 'category'])
 };
 
 export const loadModules = async() => {
@@ -15,11 +16,16 @@ export const loadModules = async() => {
     return new Promise((resolve) => {
       if (modules[key]) {
         import(`modules/${key}`).then(res => {
-          window.shelfModules[key] = res.default;
-          resolve(true);
+          resolve({
+            key,
+            value: res.default,
+          });
         });
       } else {
-        resolve(true);
+        resolve({
+          key,
+          value: null,
+        });
       }
     });
   });

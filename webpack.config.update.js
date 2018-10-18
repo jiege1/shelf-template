@@ -13,6 +13,7 @@ module.exports = (config) => {
         assets: rootSrc + '/assets',
         api: rootSrc + '/api',
         modules: rootSrc + '/modules',
+        store: rootSrc + '/store',
       }
     },
   };
