@@ -51,12 +51,7 @@ export default class Layout extends React.Component {
   }
 
   renderModules() {
-    const {
-      store,
-      store: {
-        loading, modules: loadedModules, goodsList, selectType, showCart
-      }
-    } = this.props;
+    const {loading, modules: loadedModules, goodsList, selectType} = this.props.store;
 
     if (loading) return null;
 
@@ -146,15 +141,11 @@ export default class Layout extends React.Component {
    * @returns {*}
    */
   renderOneSeller() {
-    let {goodsList, selectType} = this.props.store;
+    let {goodsList, allGoods, selectType} = this.props.store;
 
     // 单个商家， 存在分类的话, 过滤数据
     if (goodsList && goodsList.length && modules.mainType === 'category') {
       if (selectType === -1) {
-        let allGoods = [];
-        goodsList.forEach(item => {
-          allGoods = allGoods.concat(item.item);
-        });
         goodsList = allGoods;
       } else {
         goodsList = goodsList[selectType].item;

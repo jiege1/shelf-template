@@ -21,15 +21,15 @@ import moment from 'moment';
 export default function({action = 'ITEM_CLICK', itemId, couponId}) {
 
   // 记录到本地日志
-  // if (ele && ele.logger) {
-  //
-  //   if (itemId) {
-  //     ele.logger.info(`${action} ${itemId}`);
-  //   } else if (couponId) {
-  //     ele.logger.info(`${action} ${couponId}`);
-  //   }
-  //
-  // }
+  if (ele && ele.logger) {
+
+    if (itemId) {
+      ele.logger.info(`${action} ${itemId}`);
+    } else if (couponId) {
+      ele.logger.info(`${action} ${couponId}`);
+    }
+
+  }
 
   const op_time = moment().format('YYYY-MM-DD HH:mm:ss');
 

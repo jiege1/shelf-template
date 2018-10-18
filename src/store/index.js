@@ -5,6 +5,7 @@ import {loadModules, modules} from 'modules';
 import {getGoodsList} from 'api';
 import ShopCart from './models/shopCart';
 import feedBack from 'common/utils/feedBack';
+import Utils from 'common/utils';
 
 class Store extends Base {
 
@@ -58,10 +59,13 @@ class Store extends Base {
 
   @action showGoodsDetail(goods) {
     this.detail = goods;
+
     // 数据回流
-    feedBack({
-      itemId: goods.goodsTaobaoId,
-    });
+    if (!Utils.isLocal()) {
+      feedBack({
+        itemId: goods.goodsTaobaoId,
+      });
+    }
 
   }
 
