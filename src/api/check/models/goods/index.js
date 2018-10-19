@@ -43,6 +43,15 @@ export default class Goods extends Base {
       defaultValue: 'customDescription',
       isRequired: true,
     },
+    skuProps: {
+      type: 'Default'
+    },
+    skusMapValues: {
+      type: 'Default'
+    },
+    skusMapKeys: {
+      type: 'Default'
+    },
   };
 
 }

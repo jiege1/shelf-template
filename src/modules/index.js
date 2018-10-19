@@ -5,7 +5,7 @@ window.shelfModules = {};
 export const modules = {
   redRain: true, // 红包雨
   shopCar: true, // 购物车
-  mainType: 'category', // oneOf([null, 'sellers', 'category'])
+  mainType: null, // oneOf([null, 'sellers', 'category'])
 };
 
 export const loadModules = async() => {

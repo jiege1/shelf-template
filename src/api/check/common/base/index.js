@@ -17,6 +17,10 @@ export default class Base {
     });
   }
 
+  createDefault(check, value) {
+    this[check.key] = value;
+  }
+
   createArray(check, value) {
 
     const {key, child, min = 0, max = Infinity} = check;

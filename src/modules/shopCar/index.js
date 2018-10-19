@@ -6,6 +6,7 @@ import classnames from 'classnames';
 import CART, {menus} from 'common/const/shopConst';
 import ShopCarGoods from './components/shopCarGoods';
 import CollectionGoods from './components/collectionGoods';
+import PayModal from './components/payModal';
 import close2 from 'assets/images/shopImages/return2.png';
 import close1 from 'assets/images/shopImages/return1.png';
 
@@ -88,12 +89,13 @@ export default class ShopCar extends React.Component {
   }
 
   render() {
-    const {visible} = this.props.store.shopCart;
+    const {shopCart, shopCart: {visible, paying}} = this.props.store;
 
     return (
       <Fragment>
         {this.renderShopCart()}
         {visible && this.renderContent()}
+        {paying && <PayModal shopCart={shopCart}/>}
       </Fragment>
     );
   }

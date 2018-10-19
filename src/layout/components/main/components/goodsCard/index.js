@@ -48,7 +48,7 @@ export default class GoodsCard extends React.Component {
     const {card} = MAIN.goodsList;
     const {goods: {picUrl, title}, onClickItem} = this.props;
 
-    const width = card.width - 2 * card.padding;
+    const width = card.width;
 
     const props = {
       className: css.card,

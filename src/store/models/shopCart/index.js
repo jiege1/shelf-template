@@ -1,6 +1,8 @@
 
-import {observable, action, computed} from 'mobx';
+import {message} from 'antd';
+import {observable, action, computed, runInAction} from 'mobx';
 import Base from 'store/models/base';
+import {pay} from 'api';
 
 export default class ShopCart extends Base {
 
@@ -8,6 +10,8 @@ export default class ShopCart extends Base {
   // @observable menuIndex = 0; //购物车或收藏
   @observable selected = [];
   @observable goodsContainer = {};
+  @observable paying = false;
+  @observable payUrl = 'https://www.baidu.com';
 
   constructor(props) {
     super(props);
@@ -104,8 +108,36 @@ export default class ShopCart extends Base {
 
   }
 
-  @action pay() {
-    console.log('结算!');
+  @action async pay() {
+    if (!this.selected.length) {
+      message.warn('您还未选中需要结算的商品哦！');
+    } else {
+      this.paying = true;
+
+      const payGoods = this.selected.map(goodsId => {
+        const detail = this.getGoodsDetail(goodsId);
+        const num = this.goodsContainer[goodsId] || 0;
+        let skuId = 0;
+
+        if (detail.skusMapKeys.length) {
+          skuId = detail.skusMapKeys[0].skuId;
+        }
+
+        return `${goodsId}_${skuId}_${num}`;
+      });
+
+      const data = await pay(payGoods.join(','));
+
+      runInAction(() => {
+        this.payUrl = data;
+      });
+
+    }
+  }
+
+  @action closePay() {
+    this.paying = false;
+    this.payUrl = '';
   }
 
 }
